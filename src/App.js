@@ -1,81 +1,81 @@
-import React from "react"
-import "./App.css"
-import TextField from "@material-ui/core/TextField"
-import Box from "@material-ui/core/Box"
-import Slider from "@material-ui/core/Slider"
+import React, { useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
-import Typography from "@material-ui/core/Typography"
+import { Container, Grid, Paper, Slider } from "@material-ui/core"
+import { green } from "@material-ui/core/colors"
 
-function App() {
-	const [startTime, setStartTime] = React.useState(new Date())
-	const [endTime, setEndTime] = React.useState(new Date())
+const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+	},
+	paper: {
+		margin: theme.spacing(2),
+		padding: theme.spacing(2, 1),
+		textAlign: "center",
+		color: theme.palette.text.secondary,
+		height: 300,
+	},
+}))
 
-	const useStyles = makeStyles((theme) => ({
-		textField: {
-			marginLeft: theme.spacing(1),
-			marginRight: theme.spacing(1),
-			width: 200,
-		},
-	}))
-
-	const dtf = new Intl.DateTimeFormat("uk-EN", {
-		year: "numeric",
-		month: "numeric",
-		day: "numeric",
-	})
-
+export default function App() {
 	const classes = useStyles()
+	const [color, setColor] = useState({ red: 255, green: 255, blue: 255 })
 
-	const handleDateChange = (event) => {
-		let duration = endTime.getTime() - startTime.getTime()
-		if (event.target.value.length > 0) {
-			let nd = new Date(event.target.value)
-			setStartTime(nd)
-			setEndTime(new Date(nd.getTime() + duration))
-		}
+	const handleChangeRed = (event, newValue) => {
+		const newColor = color
+		setColor({ ...newColor, red: newValue })
 	}
-
-	const durationUpdate = (event, duration) => {
-		let newEnd = new Date(
-			startTime.getTime() + duration * 24 * 60 * 60 * 1000,
-		)
-		setEndTime(newEnd)
+	const handleChangeGreen = (event, newValue) => {
+		const newColor = color
+		setColor({ ...newColor, green: newValue })
 	}
-
-	const duration =
-		(endTime.getTime() - startTime.getTime()) / 1000 / 60 / 60 / 24
-
+	const handleChangeBlue = (event, newValue) => {
+		const newColor = color
+		setColor({ ...newColor, blue: newValue })
+	}
 	return (
-		<div>
-			<Typography variant='h1'>Event timing</Typography>
-			<Typography variant='h2'>
-				From {dtf.format(startTime)} to {dtf.format(endTime)}
-			</Typography>
-			<TextField
-				label='Event start date'
-				type='date'
-				onChange={(event) => {
-					handleDateChange(event)
-				}}
-				defaultValue={startTime.toISOString().substring(0, 10)}
-				className={classes.textField}
-				InputLabelProps={{ shrink: true }}
-			/>
-			<Typography id='slider-label' gutterBottom>
-				Duration (days)
-			</Typography>
-			<Box style={{ width: "50%" }}>
-				<Slider
-					value={duration}
-					valueLabelDisplay='auto'
-					step={1}
-					min={1}
-					max={100}
-					onChange={durationUpdate}
-				/>
-			</Box>
+		<div className={classes.root}>
+			<Container maxWidth='sm'>
+				<Grid container>
+					<Grid item xs={3}></Grid>
+					<Grid item xs={6}>
+						<Paper
+							elevation={2}
+							className={classes.paper}
+							style={{
+								backgroundColor: `rgb(${color.red},${color.green},${color.blue})`,
+							}}>
+							<Slider
+								id='red'
+								min={0}
+								max={255}
+								value={color.red}
+								onChange={handleChangeRed}
+								valueLabelDisplay='auto'
+								orientation='vertical'
+							/>
+							<Slider
+								id='green'
+								min={0}
+								max={255}
+								value={color.green}
+								onChange={handleChangeGreen}
+								valueLabelDisplay='auto'
+								orientation='vertical'
+							/>
+							<Slider
+								id='blue'
+								min={0}
+								max={255}
+								value={color.blue}
+								onChange={handleChangeBlue}
+								valueLabelDisplay='auto'
+								orientation='vertical'
+							/>
+						</Paper>
+					</Grid>
+					<Grid item xs={3}></Grid>
+				</Grid>
+			</Container>
 		</div>
 	)
 }
-
-export default App
