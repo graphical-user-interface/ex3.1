@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { Container, Grid, Paper, Slider } from "@material-ui/core"
-import { green } from "@material-ui/core/colors"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
